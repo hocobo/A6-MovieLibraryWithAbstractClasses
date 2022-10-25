@@ -6,26 +6,30 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
 {
     public class Show : Media
     {
-        public List<int> ShowIds { get; set; }
-        public List<string> ShowTitles { get; set; }    
-        public List<string> ShowEpisode { get; set; }
-        public List<string> ShowSeason { get; set; }    
-        public List<string> ShowWriters { get; set; }   
+        private List<Show> shows = new List<Show>();
+        private int _ShowId { get; set; }
+        private string _ShowTitle { get; set; }    
+        private string _ShowEpisode { get; set; }
+        private string _ShowSeason { get; set; }    
+        private string _ShowWriters { get; set; }   
+        
 
-        public int Episode { get; set; }
-        public int Season { get; set; } 
-        public string Writers { get; set; }
+        public Show() {}
 
-        public Show()
+        public Show(int showId, string showTitle, string showEpisode, string showSeason, string showWriters)
         {
-            Read();
-            Display();
+            _ShowId = showId;
+            _ShowTitle = showTitle;
+            _ShowEpisode = showEpisode;
+            _ShowSeason = showSeason;
+            _ShowWriters = showWriters;
         }
+
         public override void Read()
         {
             try
             {
-                StreamReader sr = new StreamReader($"{Environment.CurrentDirectory}shows.csv");
+                StreamReader sr = new StreamReader(@"csvFolder\shows.csv");
                 sr.ReadLine();
                 while (!sr.EndOfStream)
                 {
@@ -34,11 +38,12 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
                     {
                         int idx = line.IndexOf('"');
                         string[] showDetails = line.Split(',');
-                        ShowIds.Add(int.Parse(showDetails[0]));
-                        ShowTitles.Add(showDetails[1]);
-                        ShowEpisode.Add(showDetails[2]);
-                        ShowSeason.Add(showDetails[3]);
-                        ShowWriters.Add(showDetails[4]);
+                        _ShowId = (int.Parse(showDetails[0]));
+                        _ShowTitle = (showDetails[1]);
+                        _ShowEpisode = (showDetails[2]);
+                        _ShowSeason = (showDetails[3]);
+                        _ShowWriters = (showDetails[4].Replace("|", ", "));
+                        shows.Add(new Show(_ShowId,_ShowTitle,_ShowEpisode,_ShowSeason,_ShowWriters));
                     }
                 }
                 sr.Close();
@@ -51,13 +56,13 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
         
         public override void Display()
         {
-            for (int i = 0; i < ShowIds.Count; i++)
+            foreach (var show in shows)
             {
-                Console.WriteLine($"Id: {ShowIds[i]}");
-                Console.WriteLine($"Title: {ShowTitles[i]}");
-                Console.WriteLine($"Video Format: {ShowEpisode[i]}");
-                Console.WriteLine($"Video Length: {ShowSeason[i]}");
-                Console.WriteLine($"Video Region: {ShowWriters[i]}");
+                Console.WriteLine($"Id: {show._ShowId}");
+                Console.WriteLine($"Title: {show._ShowTitle}");
+                Console.WriteLine($"Episode: {show._ShowEpisode}");
+                Console.WriteLine($"Season: {show._ShowSeason}");
+                Console.WriteLine($"Writer/s: {show._ShowWriters}");
                 Console.WriteLine();
             }
         }

@@ -23,21 +23,31 @@ namespace A6___MovieLibraryWithAbstractClasses
         public static void Switch()
         {
             int input = Convert.ToInt32(Console.ReadLine());
-            Media media = null;
 
-            switch (input)
+            while (input == 1 || input == 2 || input == 3)
             {
-                case 1:
-                    media = new Movie();
-                    break;
-                case 2:
-                    media = new Show();
-                    break;
-                case 3:
-                    media = new Video();
-                    break;
+                switch (input)
+                {
+                    case 1:
+                        Media movie = new Movie();
+                        movie.Read();
+                        movie.Display();
+                        break;
+                    case 2:
+                        Media show = new Show();
+                        show.Read();
+                        show.Display();
+                        break;
+                    case 3:
+                        Media video = new Video();
+                        video.Read();
+                        video.Display();
+                        break;
+                }
+                Console.WriteLine();
+                input = Convert.ToInt32(Console.ReadLine());
             }
-            media?.Display();
+                
         }
     }
 }

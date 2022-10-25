@@ -8,16 +8,18 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
 {
     public class Movie : Media
     {
-        public string[] Genres { get; set; }
-        
-        public List<int> MovieIds { get; set; }
-        public List<string> MovieTitles{ get; set; }
-        public List<string> MovieGenres{ get; set; }
+        private readonly List<Movie> movies = new List<Movie>();
 
-        public Movie()
+        private int _MovieId { get; set; }
+        private string _MovieTitle { get; set; } 
+        private string _MovieGenre { get; set;} 
+
+        public Movie(){}
+        private Movie(int movieId, string movieTitle, string movieGenre)
         {
-            Read();
-            Display();
+            _MovieId = movieId;
+            _MovieTitle = movieTitle;
+            _MovieGenre = movieGenre;
         }
 
 
@@ -25,7 +27,7 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
         {
             try
             {
-                StreamReader sr = new StreamReader($"{Environment.CurrentDirectory}movies.csv");
+                StreamReader sr = new StreamReader(@"csvFolder\movies.csv");
                 sr.ReadLine();
                 while (!sr.EndOfStream)
                 {
@@ -36,18 +38,20 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
                         if (idx == -1)
                         {
                             string[] movieDetails = line.Split(',');
-                            MovieIds.Add(int.Parse(movieDetails[0]));
-                            MovieTitles.Add(movieDetails[1]);
-                            MovieGenres.Add(movieDetails[2].Replace("|", ", "));
+                            _MovieId = (int.Parse(movieDetails[0]));
+                            _MovieTitle = (movieDetails[1]);
+                            _MovieGenre = (movieDetails[2].Replace("|", ", "));
+                            movies.Add(new Movie(_MovieId,_MovieTitle,_MovieGenre));
                         }
                         else
                         {
-                            MovieIds.Add(int.Parse(line.Substring(0, idx - 1)));
+                            _MovieId = (int.Parse(line.Substring(0, idx - 1)));
                             line = line.Substring(idx + 1);
                             idx = line.IndexOf('"');
-                            MovieTitles.Add(line.Substring(0, idx));
+                            _MovieTitle = (line.Substring(0, idx));
                             line = line.Substring(idx + 2);
-                            MovieGenres.Add(line.Replace("|", ", "));
+                            _MovieGenre = (line.Replace("|", ", "));
+                            movies.Add(new Movie(_MovieId,_MovieTitle,_MovieGenre));
                         }
                     }
                 }
@@ -61,12 +65,12 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
 
         public override void Display()
         {
-            for (int i = 0; i < MovieIds.Count; i++)
+            foreach (var movie in movies)
             {
-                Console.WriteLine($"Id: {MovieIds[i]}");
-                Console.WriteLine($"Title: {MovieTitles[i]}");
-                Console.WriteLine($"Genre(s): {MovieGenres[i]}");
-                Console.WriteLine();
+                Console.WriteLine($"Id: {movie._MovieId}");
+                Console.WriteLine($"Title: {movie._MovieTitle}");
+                Console.WriteLine($"Genre(s): {movie._MovieGenre}");
+                Console.WriteLine(); 
             }
         }
     }

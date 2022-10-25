@@ -6,27 +6,29 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
 {
     public class Video : Media
     {
-        public string Format { get; set; }  
-        public int Length { get; set; } 
-        public int[] Regions { get; set; }
-        
-        public List<int> VideoIds { get; set; } 
-        public List<string> VideoTitles { get; set; }   
-        public List<string> VideoFormat { get; set; }   
-        public List<int> VideoLength { get; set; }  
-        public List<string> VideoRegions { get; set; }
+        private List<Video> videos = new List<Video>();
+        private int _VideoId { get; set; } 
+        private string _VideoTitle { get; set; }   
+        private string _VideoFormat { get; set; }   
+        private int _VideoLength { get; set; }  
+        private string _VideoRegions { get; set; }
 
-        public Video()
+        public Video() {}
+
+        private Video(int videoId, string videoTitle, string videoFormat, int videoLength, string videoRegions)
         {
-            Read();
-            Display();
+            _VideoId = videoId;
+            _VideoTitle = videoTitle;
+            _VideoFormat = videoFormat;
+            _VideoLength = videoLength;
+            _VideoRegions = videoRegions;
         }
 
         public override void Read()
         {
             try
             {
-                StreamReader sr = new StreamReader($"{Environment.CurrentDirectory}videos.csv");
+                StreamReader sr = new StreamReader(@"csvFolder\videos.csv");
                 sr.ReadLine();
                 while (!sr.EndOfStream)
                 {
@@ -35,11 +37,12 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
                     {
                         int idx = line.IndexOf('"');
                         string[] videoDetails = line.Split(',');
-                        VideoIds.Add(int.Parse(videoDetails[0]));
-                        VideoTitles.Add(videoDetails[1]);
-                        VideoFormat.Add(videoDetails[2]);
-                        VideoLength.Add(int.Parse(videoDetails[3]));
-                        VideoRegions.Add(videoDetails[4]);
+                            _VideoId = (int.Parse(videoDetails[0]));
+                            _VideoTitle = (videoDetails[1]);
+                            _VideoFormat = (videoDetails[2]);
+                            _VideoLength = (int.Parse(videoDetails[3]));
+                            _VideoRegions = line.Substring(idx);
+                            videos.Add(new Video(_VideoId,_VideoTitle,_VideoFormat,_VideoLength,_VideoRegions));
                     }
                 }
                 sr.Close();
@@ -52,13 +55,13 @@ namespace A6___MovieLibraryWithAbstractClasses.AbstractClasses
         
         public override void Display()
         {
-            for (int i = 0; i < VideoIds.Count; i++)
+            foreach (var video in videos)
             {
-                Console.WriteLine($"Id: {VideoIds[i]}");
-                Console.WriteLine($"Title: {VideoTitles[i]}");
-                Console.WriteLine($"Video Format: {VideoFormat[i]}");
-                Console.WriteLine($"Video Length: {VideoLength[i]}");
-                Console.WriteLine($"Video Region: {VideoRegions[i]}");
+                Console.WriteLine($"Id: {video._VideoId}");
+                Console.WriteLine($"Title: {video._VideoTitle}");
+                Console.WriteLine($"Video Format: {video._VideoFormat}");
+                Console.WriteLine($"Video Length: {video._VideoLength}");
+                Console.WriteLine($"Video Region: {video._VideoRegions}");
                 Console.WriteLine();
             }
         }
